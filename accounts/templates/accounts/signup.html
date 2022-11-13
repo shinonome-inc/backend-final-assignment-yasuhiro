@@ -1,0 +1,17 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>SIGN-UP</title>
+    <link rel="stylesheet" href="{% static 'css/sign-up.css' %}">
+</head>
+    <div >
+        <form method="POST">
+            {% csrf_token %}
+                {{ form.as_p }}
+            <button type="submit">登録</button>
+        </form>
+    </div>
+</html>
