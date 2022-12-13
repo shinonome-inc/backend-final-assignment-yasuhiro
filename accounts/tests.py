@@ -204,7 +204,7 @@ class TestSignUpView(TestCase):
         self.assertEqual(form.errors["password2"], ["確認用パスワードが一致しません。"])
         self.assertEqual(User.objects.all().count(), 0)
 
-
+"""
 class TestLoginView(TestCase):
     def setUp(self):
         pass
@@ -279,3 +279,5 @@ class TestFollowingListView(TestCase):
 class TestFollowerListView(TestCase):
     def test_success_get(self):
         pass
+"""
+ 
