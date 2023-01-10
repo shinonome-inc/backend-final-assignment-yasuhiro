@@ -4,4 +4,8 @@
 
 {% block content%}
 <h1>HomePage</h1>
+
+<h3><a type="button" href="{% url 'accounts:login' %}">ログイン</a></h3>
+<h3><a type="button" href="{% url 'accounts:logout' %}">ログアウト</a></h3>
+<h3><a type="button" href="{% url 'accounts:signup' %}">登録</a></h3>
 {% endblock%}

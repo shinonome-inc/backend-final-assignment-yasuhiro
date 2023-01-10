@@ -8,10 +8,11 @@
   <link rel="stylesheet" href="{% static 'base.css' %}">
 </head>
 <body>
+  <h1>
+    {% block h1 %}{% endblock %}
+  </h1>
   <div> 
-    <div>
-        {% block content %}{% endblock %}
-    </div>
+    {% block content %}{% endblock %}
   </div>
 </body>
 </html>

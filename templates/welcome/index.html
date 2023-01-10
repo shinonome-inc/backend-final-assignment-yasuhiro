@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block content %}
-  <a class= "signup" href= "{% url 'accounts:signup' %}">サインイン</a>
+  <p><a class="signup-index" href="{% url 'accounts:signup' %}">サインイン</a></p>
+  <p><a class="login-index" href="{% url 'accounts:login' %}">ログイン</a></p>
   <h1>Backend Final Assignment</h1>
 {% endblock %}

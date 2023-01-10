@@ -56,7 +56,7 @@ ROOT_URLCONF = "mysite.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR/"templates"],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -68,7 +68,6 @@ TEMPLATES = [
         },
     },
 ]
-
 
 
 WSGI_APPLICATION = "mysite.wsgi.application"
@@ -112,7 +111,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -123,8 +121,6 @@ TIME_ZONE = "Asia/Tokyo"
 USE_I18N = True
 
 USE_TZ = True
-
-
 
 
 # Default primary key field type
@@ -141,3 +137,6 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 AUTH_USER_MODEL = "accounts.User"
 
+LOGIN_URL = "accounts:login"
+LOGIN_REDIRECT_URL = "tweets:home"
+LOGOUT_REDIRECT_URL = "welcome:top"
