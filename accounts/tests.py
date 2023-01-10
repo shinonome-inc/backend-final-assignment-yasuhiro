@@ -241,8 +241,8 @@ class TestLoginView(TestCase):
         response = self.client.post(self.url, not_exists_user_data)
         self.assertEqual(response.status_code, 200)
 
-        form = response.content["form"]
-        self.seertFalse(form.is_valid())
+        form = response.context["form"]
+        self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["__all__"],
             ["正しいユーザー名とパスワードを入力してください。どちらのフィールドも大文字と小文字は区別されます。"],
@@ -257,11 +257,11 @@ class TestLoginView(TestCase):
 
         response = self.client.post(self.url, empty_password_user_data)
         self.assertEqual(response.status_code, 200)
-        form = response.content["form"]
+        form = response.context["form"]
         self.assertFalse(form.is_valid())
         self.assertEqual(
-            form.errors["__all__"],
-            ["正しいユーザー名とパスワードを入力してください。どちらのフィールドも大文字と小文字は区別されます。"],
+            form.errors["password"],
+            ["このフィールドは必須です。"],
         )
 
         self.assertNotIn(SESSION_KEY, self.client.session)
@@ -274,11 +274,9 @@ class TestLogoutView(TestCase):
             email="test@example.com",
             password="testpassword",
         )
-        self.logout = reverse("accounts:logout")
 
     def test_success_get(self):
-        response = self.client.post(self.logout)
-        self.assertEqual(response.status_code, 302)
+        response = self.client.post(reverse("accounts:logout"))
 
         self.assertRedirects(response, reverse(LOGOUT_REDIRECT_URL), 302, 200)
         self.assertNotIn(SESSION_KEY, self.client.session)
