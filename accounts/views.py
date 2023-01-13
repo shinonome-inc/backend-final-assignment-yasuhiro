@@ -1,8 +1,8 @@
 from django.contrib.auth import authenticate, get_user_model, login, views
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, TemplateView
 
 from .forms import LoginForm, SignUpForm
 
@@ -32,14 +32,11 @@ class LoginView(views.LoginView):
 
 
 class LogoutView(views.LogoutView):
-    pass
+    template_name = "welcome/index.html"
 
 
-class UserProfileView(LoginRequiredMixin, DetailView):
-    def get(self, request, *args, **kwargs):
-        requested_user = get_object_or_404(User, username=kwargs.get("username"))
-        requested_username = requested_user.get_username()
-        context = {
-            "requested_username": requested_username,
-        }
-        return render(request, "accounts/profile.html", context)
+class UserProfileView(LoginRequiredMixin, TemplateView):
+    template_name = "accounts/profile.html"
+
+    def get_queryset(self):
+        return User.objects.get(id=self.request.user.id)
