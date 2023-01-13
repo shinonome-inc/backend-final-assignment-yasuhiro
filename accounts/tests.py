@@ -211,8 +211,8 @@ class TestLoginView(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username="testuser",
-            email="test@example.com",
-            password="testpassword",
+            email="test246812@example.com",
+            password="testpassword1356",
         )
         self.url = reverse("accounts:login")
 
@@ -224,8 +224,7 @@ class TestLoginView(TestCase):
     def test_success_post(self):
         test_data = {
             "username": "testuser",
-            "email": "test@example.com",
-            "password": "testpassword",
+            "password": "testpassword1356",
         }
 
         response = self.client.post(self.url, test_data)
@@ -271,13 +270,13 @@ class TestLogoutView(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username="testuser",
-            email="test@example.com",
-            password="testpassword",
+            email="test1357@example.com",
+            password="testpassword132442",
         )
+        self.client.force_login(self.user)
 
-    def test_success_get(self):
+    def test_success_post(self):
         response = self.client.post(reverse("accounts:logout"))
-
         self.assertRedirects(response, reverse(LOGOUT_REDIRECT_URL), 302, 200)
         self.assertNotIn(SESSION_KEY, self.client.session)
 
