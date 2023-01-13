@@ -15,7 +15,3 @@ class LoginForm(AuthenticationForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs["placeholder"] = field.label
-
-
-class LogoutForm:
-    pass
