@@ -35,11 +35,7 @@ class LogoutView(views.LogoutView):
 
 
 class UserProfileView(LoginRequiredMixin, TemplateView):
-    moder = User
-    context_object_name = "profile"
-    template_name = "accounts/profile.html"
-    slug_field = "username"
-    slug_url_kwarg = "username"
-
     def get_context_data(self, **kwargs):
-        pass
+        context = super().get_context_data(**kwargs)
+        context["username"] = self.request.POST.get("username")
+        return context
