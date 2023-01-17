@@ -21,8 +21,11 @@ class SignUpView(CreateView):
         username = form.cleaned_data.get("username")
         password = form.cleaned_data.get("password1")
         user = authenticate(self.request, username=username, password=password)
-        login(self.request, user)
-        return response
+        if user is not None:
+            login(self.request, user)
+            return response
+        else:
+            return redirect("welcome:top")
 
 
 class LoginView(views.LoginView):
@@ -31,10 +34,12 @@ class LoginView(views.LoginView):
 
 
 class LogoutView(views.LogoutView):
-    template_name = "welcome/index.html"
+    pass
 
 
 class UserProfileView(LoginRequiredMixin, TemplateView):
+    template_name = "accounts/profile.html"
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["username"] = self.request.POST.get("username")

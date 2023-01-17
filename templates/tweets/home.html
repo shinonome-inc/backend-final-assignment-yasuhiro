@@ -5,10 +5,9 @@
 {% block content%}
 <h1>HomePage</h1>
 <h3>{{ user.username }}さん、こんにちは。</h3>
-<h3><a type="button" href="{% url 'accounts:user_profile' user.username %}"></a></h3>
-
-<form action="" method="POST">
+<a type="button" href="{% url 'accounts:user_profile' user.username %}">ユーザープロファイル</a>
+<form action="{% url 'accounts:logout' %}" method="POST">
     {% csrf_token %}
-    <h3><a type="submit" href="{% url 'accounts:logout' %}">ログアウト</a></h3>
+    <button type="submit">ログアウト</button>
 </form>
 {% endblock%}
