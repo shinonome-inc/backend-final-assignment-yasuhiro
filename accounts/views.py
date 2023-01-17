@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, get_user_model, login, views
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 
@@ -42,5 +42,5 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["username"] = self.request.POST.get("username")
+        context["username"] = self.request.GET.get("username")
         return context
