@@ -3,11 +3,13 @@
 {% block title%}HomePage{% endblock%}
 
 {% block content%}
-<h1>HomePage</h1>
-<h3>{{ user.username }}さん、こんにちは。</h3>
-<a type="button" href="{% url 'accounts:user_profile' user.username %}">ユーザープロファイル</a>
-<form action="{% url 'accounts:logout' %}" method="POST">
-    {% csrf_token %}
-    <button type="submit">ログアウト</button>
-</form>
+<div class="homepage">
+    <h1>HomePage</h1>
+    <a type="button" href="{% url 'accounts:user_profile' user.username %}">ユーザープロファイル</a>
+
+    <form action="{% url 'accounts:logout' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit">ログアウト</button>
+    </form>
+</div>
 {% endblock%}

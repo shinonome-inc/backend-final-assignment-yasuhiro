@@ -5,7 +5,7 @@
 {% block content %}
 <div class="profile">
     <h1 class="my-5"></h1>
-    <p>{{ user.username }}さん、こんにちは。</p>
+    <p>{{ username }}さん、こんにちは。</p>
     
     <form action="{% url 'accounts:logout' %}" method="POST">
     {% csrf_token %}
