@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, get_user_model, login, views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, TemplateView
 
 from mysite.settings import LOGIN_REDIRECT_URL
 
@@ -37,12 +37,10 @@ class LogoutView(views.LogoutView):
     pass
 
 
-class UserProfileView(LoginRequiredMixin, DetailView):
+class UserProfileView(LoginRequiredMixin, TemplateView):
     model = User
     template_name = "accounts/profile.html"
     context_object_name = "profile"
-    slug_field = "username"
-    slug_url_kwarg = "username"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
