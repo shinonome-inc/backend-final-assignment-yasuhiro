@@ -1,8 +1,7 @@
+from django.conf import settings
 from django.contrib.auth import SESSION_KEY
 from django.test import TestCase
 from django.urls import reverse
-
-from mysite.settings import LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL
 
 from .models import User
 
@@ -228,7 +227,7 @@ class TestLoginView(TestCase):
         }
 
         response = self.client.post(self.url, test_data)
-        self.assertRedirects(response, reverse(LOGIN_REDIRECT_URL), 302, 200)
+        self.assertRedirects(response, reverse(settings.LOGIN_REDIRECT_URL), 302, 200)
         self.assertIn(SESSION_KEY, self.client.session)
 
     def test_failure_post_with_not_exists_user(self):
@@ -277,7 +276,7 @@ class TestLogoutView(TestCase):
 
     def test_success_post(self):
         response = self.client.post(reverse("accounts:logout"))
-        self.assertRedirects(response, reverse(LOGOUT_REDIRECT_URL), 302, 200)
+        self.assertRedirects(response, reverse(settings.LOGOUT_REDIRECT_URL), 302, 200)
         self.assertNotIn(SESSION_KEY, self.client.session)
 
 
