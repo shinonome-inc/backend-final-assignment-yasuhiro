@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import SESSION_KEY
 from django.test import TestCase
 from django.urls import reverse
@@ -27,7 +28,7 @@ class TestSignUpView(TestCase):
         response = self.client.post(self.url, user_data)
         self.assertRedirects(
             response,
-            reverse("tweets:home"),
+            reverse(settings.LOGIN_REDIRECT_URL),
             status_code=302,
             target_status_code=200,
         )  # Homeにリダイレクト
@@ -205,32 +206,81 @@ class TestSignUpView(TestCase):
         self.assertEqual(User.objects.all().count(), 0)
 
 
-"""
 class TestLoginView(TestCase):
     def setUp(self):
-        pass
+        self.user = User.objects.create_user(
+            username="testuser",
+            email="test246812@example.com",
+            password="testpassword1356",
+        )
+        self.url = reverse("accounts:login")
 
     def test_success_get(self):
-        pass
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "accounts/login.html")
 
     def test_success_post(self):
-        pass
+        test_data = {
+            "username": "testuser",
+            "password": "testpassword1356",
+        }
+
+        response = self.client.post(self.url, test_data)
+        self.assertRedirects(response, reverse(settings.LOGIN_REDIRECT_URL), 302, 200)
+        self.assertIn(SESSION_KEY, self.client.session)
 
     def test_failure_post_with_not_exists_user(self):
-        pass
+        not_exists_user_data = {
+            "username": "notestuser",
+            "password": "testpassword",
+        }
+
+        response = self.client.post(self.url, not_exists_user_data)
+        self.assertEqual(response.status_code, 200)
+
+        form = response.context["form"]
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["__all__"],
+            ["正しいユーザー名とパスワードを入力してください。どちらのフィールドも大文字と小文字は区別されます。"],
+        )
+        self.assertNotIn(SESSION_KEY, self.client.session)
 
     def test_failure_post_with_empty_password(self):
-        pass
+        empty_password_user_data = {
+            "username": "testuser",
+            "password": "",
+        }
+
+        response = self.client.post(self.url, empty_password_user_data)
+        self.assertEqual(response.status_code, 200)
+        form = response.context["form"]
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["password"],
+            ["このフィールドは必須です。"],
+        )
+
+        self.assertNotIn(SESSION_KEY, self.client.session)
 
 
 class TestLogoutView(TestCase):
     def setUp(self):
-        pass
+        self.user = User.objects.create_user(
+            username="testuser",
+            email="test1357@example.com",
+            password="testpassword132442",
+        )
+        self.client.force_login(self.user)
 
-    def test_success_get(self):
-        pass
+    def test_success_post(self):
+        response = self.client.post(reverse("accounts:logout"))
+        self.assertRedirects(response, reverse(settings.LOGOUT_REDIRECT_URL), 302, 200)
+        self.assertNotIn(SESSION_KEY, self.client.session)
 
 
+"""
 class TestUserProfileView(TestCase):
     def test_success_get(self):
         pass
