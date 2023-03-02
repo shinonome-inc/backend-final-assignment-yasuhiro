@@ -124,6 +124,7 @@ class TestTweetDeleteView(TestCase):
         self.assertEquals(Tweet.objects.count(), 2)
 
 
+"""
 class TestFavoriteView(TestCase):
     def test_success_post(self):
         pass
@@ -144,3 +145,4 @@ class TestUnfavoriteView(TestCase):
 
     def test_failure_post_with_unfavorited_tweet(self):
         pass
+"""
