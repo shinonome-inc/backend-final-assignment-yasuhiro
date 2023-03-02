@@ -1,0 +1,46 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'base.css' %}">
+</head>
+
+<body>
+  <header>
+    {% if user.is_authenticated %}
+      <div class="menber">
+        <a type="button" href="{% url 'accounts:user_profile' user.username %}">User_Profile</a>
+        <br>
+        <a type="button" href="{% url 'tweets:home' %}">Twitter Clone</a>
+        <br>
+        <form action="{% url 'accounts:logout' %}" method="POST">
+          {% csrf_token %}
+          <button type="submit">ログアウト</button>
+        </form>
+      </div>
+    {% else %}
+      <div class="non-menber">
+        <a type="button" href="{% url 'accounts:login' %}">ログイン</a>
+        <br>
+        <a type="button" href="{% url 'accounts:signup' %}">登録</a>
+      </div>
+    {% endif %}
+  </header>
+
+  <main>
+    <h1>
+      {% block h1 %}{% endblock %}
+    </h1>
+      {% block content %}{% endblock %}
+  </mian>
+
+  <footer>
+  
+  </footer>
+</body>
+
+</html>

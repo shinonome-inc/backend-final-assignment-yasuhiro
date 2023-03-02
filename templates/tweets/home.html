@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title%}HomePage{% endblock%}
+
+{% block content%}
+<div class="homepage">
+    <h1>HomePage</h1>
+    <a href="{% url 'tweets:create' %}">ツイートする</a>
+    
+    {% for tweet in tweets %}
+    <div class="tweet-contents">
+        <a href="{% url 'accounts:user_profile' tweet.user%}">[投稿者] {{tweet.user}}</a>
+        <br>
+        [ツイート時間] {{tweet.created_at}}
+        <br>
+        [ツイート内容] {{tweet.content}}
+        <br>
+        <a class="detail" href="{% url 'tweets:detail' tweet.pk %}">詳細</a>
+        <br>
+    </div>
+    
+    {% empty %}
+    <p>ツイートはありません</p>
+
+    {% endfor %}
+
+</div>
+{% endblock%}

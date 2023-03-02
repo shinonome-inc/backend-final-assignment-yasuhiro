@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}プロフィール{% endblock %}
+{% block h1 %}プロフィール{% endblock %}
+
+{% block content %}
+<div class="profile">
+    {% if profile_user.username == user.username %}
+    <h1>My profile</h1>
+    <form action="{% url 'accounts:logout' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit">ログアウト</button>
+    </form>
+
+    {% endif %}
+    <h2>過去のツイート</h2>
+
+        {% for tweet in tweets %}
+        [ツイート時間] {{tweet.created_at}}
+        <br>
+        [ツイート内容] {{tweet.content}}
+        <a href="{% url 'tweets:detail' tweet.pk %}">詳細</a>
+
+        {% empty %}
+        <p>ツイートがまだありません。</p>
+        
+    {% endfor %}
+</div>
+{% endblock %}
