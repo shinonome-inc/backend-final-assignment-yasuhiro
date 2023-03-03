@@ -82,8 +82,16 @@ class TestTweetDetailView(TestCase):
 
 class TestTweetDeleteView(TestCase):
     def setUp(self):
-        self.user01 = User.objects.create_user(username="testuser01", email="testuser01@example.com", password="password15432")
-        self.user02 = User.objects.create_user(username="testuser02", email="testuser02@example.com", password="password130974")
+        self.user01 = User.objects.create_user(
+            username="testuser01",
+            email="testuser01@example.com",
+            password="password15432"
+        )
+        self.user02 = User.objects.create_user(
+            username="testuser02",
+            email="testuser02@example.com",
+            password="password130974"
+        )
         self.tweet01 = Tweet.objects.create(user=self.user01, content="テスト投稿01")
         self.tweet02 = Tweet.objects.create(user=self.user02, content="テスト投稿02")
         self.client.login(username="testuser01", password="password15432")
