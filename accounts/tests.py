@@ -286,10 +286,10 @@ class TestUserProfileView(TestCase):
         self.user01 = User.objects.create_user(
             username="testuser01",
             email="testuser01@example.com",
-            password="password15432"
+            password="password15432",
         )
-        Tweet.objects.create(user=self.user01,content="test01")
-        
+        Tweet.objects.create(user=self.user01, content="test01")
+     
     def test_success_get(self):
         self.client.login(username="testuser01", password="password15432")
         response = self.client.get(
