@@ -292,9 +292,7 @@ class TestUserProfileView(TestCase):
 
     def test_success_get(self):
         self.client.login(username="testuser01", password="password15432")
-        response = self.client.get(
-            reverse("accounts:user_profile", kwargs={"username": "testuser01"})
-        )
+        response = self.client.get(reverse("accounts:user_profile", kwargs={"username": "testuser01"}))
         self.assertEqual(response.status_code, 200)
         self.assertQuerysetEqual(response.context["tweets"], Tweet.objects.filter(user=self.user01), ordered=False)
 
