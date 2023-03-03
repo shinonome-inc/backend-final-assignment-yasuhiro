@@ -6,19 +6,18 @@
 <div class="profile">
     {% if profile_user.username == user.username %}
     <h1>My profile</h1>
-    <form action="{% url 'accounts:logout' %}" method="POST">
-        {% csrf_token %}
-        <button type="submit">ログアウト</button>
-    </form>
 
+    {% else %}
+    <h1>{{ profile_user }} 's profile</h1>
+    
     {% endif %}
-    <h2>過去のツイート</h2>
+        <h2>過去のツイート</h2>
 
-        {% for tweet in tweets %}
-        [ツイート時間] {{tweet.created_at}}
-        <br>
-        [ツイート内容] {{tweet.content}}
-        <a href="{% url 'tweets:detail' tweet.pk %}">詳細</a>
+            {% for tweet in tweets %}
+            [ツイート時間] {{ tweet.created_at }}
+            <br>
+            [ツイート内容] {{ tweet.content }}
+            <a href="{% url 'tweets:detail' tweet.pk %}">詳細</a>
 
         {% empty %}
         <p>ツイートがまだありません。</p>

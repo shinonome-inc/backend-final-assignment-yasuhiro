@@ -12,7 +12,7 @@
 <body>
   <header>
     {% if user.is_authenticated %}
-      <div class="menber">
+      <div class="member">
         <a type="button" href="{% url 'accounts:user_profile' user.username %}">User_Profile</a>
         <br>
         <a type="button" href="{% url 'tweets:home' %}">Twitter Clone</a>
