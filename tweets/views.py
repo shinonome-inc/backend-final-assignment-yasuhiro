@@ -11,7 +11,7 @@ class HomeView(LoginRequiredMixin, ListView):
     model = Tweet
     context_object_name = "tweets"
     template_name = "tweets/home.html"
-    queryset = model.objects.select_related("user").order_by("?")
+    queryset = model.objects.select_related("user").order_by("-created_at")[:10]
 
 
 class TweetCreateView(LoginRequiredMixin, CreateView):
