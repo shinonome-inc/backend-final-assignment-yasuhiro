@@ -17,6 +17,7 @@
             [ツイート時間] {{ tweet.created_at }}
             <br>
             [ツイート内容] {{ tweet.content }}
+            <br>
             <a href="{% url 'tweets:detail' tweet.pk %}">詳細</a>
 
         {% empty %}
