@@ -1,15 +1,28 @@
 {% extends 'base.html' %}
 
-{% block title%}HomePage{% endblock%}
+{% block title %}HomePage{% endblock %}
 
-{% block content%}
+{% block content %}
 <div class="homepage">
     <h1>HomePage</h1>
-    <a type="button" href="{% url 'accounts:user_profile' user.username %}">ユーザープロファイル</a>
+    <a href="{% url 'tweets:create' %}">ツイートする</a>
+    
+    {% for tweet in tweets %}
+    <div class="tweet-contents">
+        <a href="{% url 'accounts:user_profile' tweet.user %}">[投稿者] {{ tweet.user }}</a>
+        <br>
+        [ツイート時間] {{ tweet.created_at }}
+        <br>
+        [ツイート内容] {{ tweet.content }}
+        <br>
+        <a class="detail" href="{% url 'tweets:detail' tweet.pk %}">詳細</a>
+        <br>
+    </div>
+    
+    {% empty %}
+    <p>ツイートはありません</p>
 
-    <form action="{% url 'accounts:logout' %}" method="POST">
-        {% csrf_token %}
-        <button type="submit">ログアウト</button>
-    </form>
+    {% endfor %}
+
 </div>
-{% endblock%}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete{% endblock %}
+
+{% block content %}
+<div class="delete">
+    <p>[作成者]{{ tweet.user }}</p>
+    <p<[ツイート時間] {{ tweet.created_at }}</p>
+    <p>[ツイート内容] {{ tweet.content }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <p>ツイート内容を削除いたしますか。</p>
+        <button type="submit">delete</button>
+    </form>
+</div>
+{% endblock content %}

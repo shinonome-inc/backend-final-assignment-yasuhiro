@@ -1,13 +1,14 @@
 from django.conf import settings
-from django.contrib.auth import authenticate, get_user_model, login, views
+from django.contrib.auth import authenticate, login, views
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, DetailView
+
+from accounts.models import User
+from tweets.models import Tweet
 
 from .forms import LoginForm, SignUpForm
-
-User = get_user_model()
 
 
 class SignUpView(CreateView):
@@ -36,14 +37,14 @@ class LogoutView(views.LogoutView):
     pass
 
 
-class UserProfileView(LoginRequiredMixin, TemplateView):
+class UserProfileView(LoginRequiredMixin, DetailView):
     model = User
+    context_object_name = "profile_user"
     template_name = "accounts/profile.html"
+    slug_field = "username"
+    slug_url_kwarg = "username"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["profile_user"] = get_object_or_404(
-            User, username=self.kwargs.get("username")
-        )
-
+        context["tweets"] = Tweet.objects.select_related("user").filter(user=self.object).order_by("-created_at").all()
         return context
