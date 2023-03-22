@@ -86,7 +86,7 @@ class FollowView(LoginRequiredMixin, View):
         self.user = get_object_or_404(User, username=self.kwargs["username"])
 
         if self.user == self.request.user:
-            messages.add_message(self.request, messages.ERROR, "自分自身をフォローできません。")
+            messages.add_message(self.request, messages.ERROR, "自分自身をフォローすることはできません")
 
         else:
             if self.request.user.followings.filter(username=self.user.username).exists():
@@ -103,7 +103,7 @@ class UnFollowView(LoginRequiredMixin, View):
         self.user = get_object_or_404(User, username=self.kwargs["username"])
 
         if self.user == self.request.user:
-            messages.add_message(self.request, messages.ERROR, "自分自身のフォロー解除はできません。")
+            messages.add_message(self.request, messages.ERROR, "自分自身をフォロー解除することはできません。")
 
         else:
             if self.request.user.followings.filter(username=self.user.username).exists():
