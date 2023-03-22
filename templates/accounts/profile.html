@@ -6,9 +6,29 @@
 <div class="profile">
     {% if profile_user.username == user.username %}
     <h1>My profile</h1>
+    <a href="{% url 'accounts:following_list' profile_user.username %}">フォロー数:{{ following_numbers }}人</a>
+    <a href="{% url 'accounts:follower_list' profile_user.username %}">フォローワー数:{{ followers_numbers }}人</a>
+    <form action="{% url 'accounts:follow' profile_user.username %}" method="POST">
+        {% csrf_token %}
+        <button>Follow</button>
+    </form>
+    <form action="{% url 'accounts:unfollow' profile_user.username %}" method="POST">
+        {% csrf_token %}
+        <button>Unfollow</button>
+    </form>
 
     {% else %}
     <h1>{{ profile_user }} 's profile</h1>
+    <a href="{% url 'accounts:following_list' profile_user.username %}">フォロー数:{{ following_numbers }}人</a>
+    <a href="{% url 'accounts:follower_list' profile_user.username %}">フォローワー数:{{ followers_numbers }}人</a>
+    <form action="{% url 'accounts:follow' profile_user.username %}" method="POST">
+        {% csrf_token %}
+        <button>Follow this user</button>
+    </form>
+    <form action="{% url 'accounts:unfollow' profile_user.username %}" method="POST">
+        {% csrf_token %}
+        <button>Unfollow this user</button>
+    </form>
     
     {% endif %}
         <h2>過去のツイート</h2>
