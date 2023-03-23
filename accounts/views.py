@@ -107,11 +107,10 @@ class UnFollowView(LoginRequiredMixin, View):
             messages.add_message(self.request, messages.ERROR, "自分自身をフォロー解除することはできません。")
             return redirect("tweets:home")
 
-        if self.request.user.followings.filter(username=self.user.username).exists():
-            self.request.user.followings.remove(self.user)
-            messages.add_message(self.request, messages.SUCCESS, "フォローを解除しました。")
-            return redirect("tweets:home")
-
         if not self.request.user.followings.filter(username=self.user.username).exists():
             messages.add_message(self.request, messages.ERROR, "フォローしていません。")
             return redirect("tweets:home")
+
+        self.request.user.followings.remove(self.user)
+        messages.add_message(self.request, messages.SUCCESS, "フォローを解除しました。")
+        return redirect("tweets:home")
