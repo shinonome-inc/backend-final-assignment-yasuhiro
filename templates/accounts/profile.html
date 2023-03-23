@@ -9,12 +9,6 @@
 
     {% else %}
     <h1>{{ profile_user }} 's profile</h1>
-
-    {% endif %}
-
-    <a href="{% url 'accounts:following_list' profile_user.username %}">フォロー数:{{ following_numbers }}人</a>
-    <a href="{% url 'accounts:follower_list' profile_user.username %}">フォローワー数:{{ followers_numbers }}人</a>
-
     <div class="follow">
         {% if is_following %}
         <form action="{% url 'accounts:unfollow' profile_user.username %}" method="POST">
@@ -26,17 +20,23 @@
             {% csrf_token %}
             <button>Follow</button>
         </form>
-        {% endif %}
-    
-        <h2>過去のツイート</h2>
 
-            {% for tweet in tweets %}
-            [ツイート時間] {{ tweet.created_at }}
-            <br>
-            [ツイート内容] {{ tweet.content }}
-            <br>
-            <a href="{% url 'tweets:detail' tweet.pk %}">詳細</a>
-            <br>
+        {% endif %}
+        
+    {% endif %}
+
+    <a href="{% url 'accounts:following_list' profile_user.username %}">フォロー数:{{ following_numbers }}人</a>
+    <a href="{% url 'accounts:follower_list' profile_user.username %}">フォローワー数:{{ followers_numbers }}人</a>
+
+    <h2>過去のツイート</h2>
+
+        {% for tweet in tweets %}
+        [ツイート時間] {{ tweet.created_at }}
+        <br>
+        [ツイート内容] {{ tweet.content }}
+        <br>
+        <a href="{% url 'tweets:detail' tweet.pk %}">詳細</a>
+        <br>
         {% empty %}
         <p>ツイートがまだありません。</p>
         

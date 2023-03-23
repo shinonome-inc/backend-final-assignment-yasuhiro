@@ -94,10 +94,9 @@ class FollowView(LoginRequiredMixin, View):
             messages.add_message(self.request, messages.WARNING, "すでにフォローしています。")
             return redirect("tweets:home")
 
-        else:
-            self.request.user.followings.add(self.user)
-            messages.add_message(self.request, messages.SUCCESS, "フォローしました。")
-            return redirect("tweets:home")
+        self.request.user.followings.add(self.user)
+        messages.add_message(self.request, messages.SUCCESS, "フォローしました。")
+        return redirect("tweets:home")
 
 
 class UnFollowView(LoginRequiredMixin, View):
@@ -113,6 +112,6 @@ class UnFollowView(LoginRequiredMixin, View):
             messages.add_message(self.request, messages.SUCCESS, "フォローを解除しました。")
             return redirect("tweets:home")
 
-        else:
+        if not self.request.user.followings.filter(username=self.user.username).exists():
             messages.add_message(self.request, messages.ERROR, "フォローしていません。")
             return redirect("tweets:home")
