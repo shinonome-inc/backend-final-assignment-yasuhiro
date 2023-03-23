@@ -16,7 +16,7 @@ class User(AbstractUser):
 
 
 class FriendShip(models.Model):
-    follower = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    follower = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="follower_users", on_delete=models.CASCADE)
     following = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="following_users", on_delete=models.CASCADE)
     data_created = models.DateTimeField(auto_now_add=True)
 

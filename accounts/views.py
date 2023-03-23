@@ -48,6 +48,7 @@ class UserProfileView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["tweets"] = Tweet.objects.select_related("user").filter(user=self.object).order_by("-created_at").all()
+        context["is_following"] = FriendShip.objects.filter(following=self.request.user, follower=self.object).exists()
         context["following_numbers"] = FriendShip.objects.filter(following=self.object).count()
         context["followers_numbers"] = FriendShip.objects.filter(follower=self.object).count()
         return context
@@ -87,15 +88,16 @@ class FollowView(LoginRequiredMixin, View):
 
         if self.user == self.request.user:
             messages.add_message(self.request, messages.ERROR, "自分自身をフォローすることはできません")
+            return redirect("tweets:home")
+
+        if self.request.user.followings.filter(username=self.user.username).exists():
+            messages.add_message(self.request, messages.WARNING, "すでにフォローしています。")
+            return redirect("tweets:home")
 
         else:
-            if self.request.user.followings.filter(username=self.user.username).exists():
-                messages.add_message(self.request, messages.WARNING, "すでにフォローしています。")
-            else:
-                self.request.user.followings.add(self.user)
-                messages.add_message(self.request, messages.SUCCESS, "フォローしました。")
-
-        return redirect("tweets:home")
+            self.request.user.followings.add(self.user)
+            messages.add_message(self.request, messages.SUCCESS, "フォローしました。")
+            return redirect("tweets:home")
 
 
 class UnFollowView(LoginRequiredMixin, View):
@@ -104,12 +106,13 @@ class UnFollowView(LoginRequiredMixin, View):
 
         if self.user == self.request.user:
             messages.add_message(self.request, messages.ERROR, "自分自身をフォロー解除することはできません。")
+            return redirect("tweets:home")
+
+        if self.request.user.followings.filter(username=self.user.username).exists():
+            self.request.user.followings.remove(self.user)
+            messages.add_message(self.request, messages.SUCCESS, "フォローを解除しました。")
+            return redirect("tweets:home")
 
         else:
-            if self.request.user.followings.filter(username=self.user.username).exists():
-                self.request.user.followings.remove(self.user)
-                messages.add_message(self.request, messages.SUCCESS, "フォローを解除しました。")
-            else:
-                messages.add_message(self.request, messages.ERROR, "フォローしていません。")
-
-        return redirect("tweets:home")
+            messages.add_message(self.request, messages.ERROR, "フォローしていません。")
+            return redirect("tweets:home")
