@@ -56,6 +56,7 @@ class UserProfileView(LoginRequiredMixin, DetailView):
 
 class FollowingListView(LoginRequiredMixin, ListView):
     model = User
+    context_object_name = "folloing_list"
     template_name = "accounts/following_list.html"
 
     def get_queryset(self):
@@ -64,12 +65,13 @@ class FollowingListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["traget_user"] = self.user
+        context["target_user"] = self.user
         return context
 
 
 class FollowerListView(LoginRequiredMixin, ListView):
     model = User
+    context_object_name = "follower_list"
     template_name = "accounts/follower_list.html"
 
     def get_queryset(self):
@@ -78,39 +80,39 @@ class FollowerListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["traget_user"] = self.user
+        context["target_user"] = self.user
         return context
 
 
 class FollowView(LoginRequiredMixin, View):
     def post(self, *args, **kwargs):
-        self.user = get_object_or_404(User, username=self.kwargs["username"])
+        user = get_object_or_404(User, username=self.kwargs["username"])
 
-        if self.user == self.request.user:
+        if user == self.request.user:
             messages.add_message(self.request, messages.ERROR, "自分自身をフォローすることはできません")
             return redirect("tweets:home")
 
-        if self.request.user.followings.filter(username=self.user.username).exists():
+        if self.request.user.followings.filter(username=user.username).exists():
             messages.add_message(self.request, messages.WARNING, "すでにフォローしています。")
             return redirect("tweets:home")
 
-        self.request.user.followings.add(self.user)
+        self.request.user.followings.add(user)
         messages.add_message(self.request, messages.SUCCESS, "フォローしました。")
         return redirect("tweets:home")
 
 
 class UnFollowView(LoginRequiredMixin, View):
     def post(self, *args, **kwargs):
-        self.user = get_object_or_404(User, username=self.kwargs["username"])
+        user = get_object_or_404(User, username=self.kwargs["username"])
 
-        if self.user == self.request.user:
+        if user == self.request.user:
             messages.add_message(self.request, messages.ERROR, "自分自身をフォロー解除することはできません。")
             return redirect("tweets:home")
 
-        if not self.request.user.followings.filter(username=self.user.username).exists():
+        if not self.request.user.followings.filter(username=user.username).exists():
             messages.add_message(self.request, messages.ERROR, "フォローしていません。")
             return redirect("tweets:home")
 
-        self.request.user.followings.remove(self.user)
+        self.request.user.followings.remove(user)
         messages.add_message(self.request, messages.SUCCESS, "フォローを解除しました。")
         return redirect("tweets:home")
