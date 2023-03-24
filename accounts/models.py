@@ -10,7 +10,7 @@ class User(AbstractUser):
         "self",
         related_name="followers",
         through="FriendShip",
-        through_fields=("following", "follower"),
+        through_fields=("follower", "following"),
         symmetrical=False,
     )
 

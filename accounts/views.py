@@ -61,7 +61,7 @@ class FollowingListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         self.user = get_object_or_404(User, username=self.kwargs["username"])
-        return self.user.followings.all().order_by("-date_joined")
+        return self.user.followers.all().order_by("-date_joined")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -76,7 +76,7 @@ class FollowerListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         self.user = get_object_or_404(User, username=self.kwargs["username"])
-        return self.user.followers.all().order_by("-date_joined")
+        return self.user.followings.all().order_by("-date_joined")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -92,11 +92,11 @@ class FollowView(LoginRequiredMixin, View):
             messages.add_message(self.request, messages.ERROR, "自分自身をフォローすることはできません")
             return redirect("tweets:home")
 
-        if self.request.user.followings.filter(username=user.username).exists():
+        if self.request.user.followers.filter(username=user.username).exists():
             messages.add_message(self.request, messages.WARNING, "すでにフォローしています。")
             return redirect("tweets:home")
 
-        self.request.user.followings.add(user)
+        self.request.user.followers.add(user)
         messages.add_message(self.request, messages.SUCCESS, "フォローしました。")
         return redirect("tweets:home")
 
@@ -109,10 +109,10 @@ class UnFollowView(LoginRequiredMixin, View):
             messages.add_message(self.request, messages.ERROR, "自分自身をフォロー解除することはできません。")
             return redirect("tweets:home")
 
-        if not self.request.user.followings.filter(username=user.username).exists():
+        if not self.request.user.followers.filter(username=user.username).exists():
             messages.add_message(self.request, messages.ERROR, "フォローしていません。")
             return redirect("tweets:home")
 
-        self.request.user.followings.remove(user)
+        self.request.user.followers.remove(user)
         messages.add_message(self.request, messages.SUCCESS, "フォローを解除しました。")
         return redirect("tweets:home")

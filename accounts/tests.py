@@ -292,7 +292,7 @@ class TestUserProfileView(TestCase):
         )
         Tweet.objects.create(user=self.user01, content="test01")
         Tweet.objects.create(user=self.user02, content="test02")
-        FriendShip.objects.create(follower=self.user01, following=self.user02)
+        FriendShip.objects.create(following=self.user01, follower=self.user02)
 
     def test_success_get(self):
         self.client.login(username="testuser01", password="password15432")
@@ -325,14 +325,14 @@ class TestFollowView(TestCase):
     def test_failure_post_with_not_exist_user(self):
         response = self.client.post(reverse("accounts:follow", kwargs={"username": "NoneUser"}))
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(self.user01.followings.count(), 0)
+        self.assertEqual(self.user01.followers.count(), 0)
 
     def test_failure_post_with_self(self):
         response = self.client.post(reverse("accounts:follow", kwargs={"username": "TestUser01"}), follow=True)
         self.assertRedirects(response, reverse("tweets:home"))
         message = str(list(get_messages(response.wsgi_request))[0])
         self.assertEqual("自分自身をフォローすることはできません", message)
-        self.assertEqual(self.user01.followings.count(), 0)
+        self.assertEqual(self.user01.followers.count(), 0)
 
 
 class TestUnfollowView(TestCase):
@@ -344,12 +344,12 @@ class TestUnfollowView(TestCase):
             username="TestUser02", password="password281027", email="testuser02@example.com"
         )
         self.client.login(username="TestUser01", password="password304817")
-        self.user01.followings.add(self.user02)
+        self.user01.followers.add(self.user02)
 
     def test_success_post(self):
         response = self.client.post(reverse("accounts:unfollow", kwargs={"username": "TestUser02"}))
         self.assertRedirects(response, reverse("tweets:home"))
-        self.assertFalse(FriendShip.objects.filter(follower=self.user01, following=self.user02).exists())
+        self.assertFalse(FriendShip.objects.filter(following=self.user01, follower=self.user02).exists())
 
     def test_failure_post_with_not_exist_tweet(self):
         response = self.client.post(reverse("accounts:unfollow", kwargs={"username": "NoneUser"}))
@@ -373,7 +373,7 @@ class TestFollowingListView(TestCase):
             username="TestUser02", password="password281027", email="testuser02@example.com"
         )
         self.client.login(username="TestUser01", password="password304817")
-        self.user01.followings.add(self.user02)
+        self.user01.followers.add(self.user02)
 
     def test_success_get(self):
         response = self.client.get(reverse("accounts:following_list", kwargs={"username": "TestUser01"}))
@@ -393,7 +393,7 @@ class TestFollowerListView(TestCase):
             username="TestUser02", password="password281027", email="testuser02@example.com"
         )
         self.client.login(username="TestUser01", password="password304817")
-        self.user01.followings.add(self.user02)
+        self.user01.followers.add(self.user02)
 
     def test_success_get(self):
         response = self.client.get(reverse("accounts:follower_list", kwargs={"username": "TestUser02"}))
