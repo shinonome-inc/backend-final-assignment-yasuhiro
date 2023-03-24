@@ -29,6 +29,14 @@
         <a type="button" href="{% url 'accounts:signup' %}">登録</a>
       </div>
     {% endif %}
+
+    {% if messages %}
+    <div>
+      {% for message in messages %}
+      <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
   </header>
 
   <main>
