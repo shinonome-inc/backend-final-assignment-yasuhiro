@@ -7,6 +7,7 @@
     <a href="{% url 'accounts:user_profile' tweet.user %}">{{tweet.user}}</a>
     <p>{{ tweet.content }}</p>
     <p>{{ tweet.created_at }}</p>
+    {% include 'tweets/like.html' %}
 
     {% if tweet.user == request.user %}
     <a href="{% url 'tweets:delete' tweet.pk %}">削除</a>

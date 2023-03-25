@@ -37,6 +37,8 @@
         <br>
         <a href="{% url 'tweets:detail' tweet.pk %}">詳細</a>
         <br>
+        {% include 'tweets/like.html' %}
+        <br>
         {% empty %}
         <p>ツイートがまだありません。</p>
         

@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, View
 
 from accounts.models import FriendShip, User
-from tweets.models import Tweet
+from tweets.models import Like, Tweet
 
 from .forms import LoginForm, SignUpForm
 
@@ -51,6 +51,7 @@ class UserProfileView(LoginRequiredMixin, DetailView):
         context["is_following"] = FriendShip.objects.filter(following=self.request.user, follower=self.object).exists()
         context["following_numbers"] = FriendShip.objects.filter(following=self.object).count()
         context["followers_numbers"] = FriendShip.objects.filter(follower=self.object).count()
+        context["liked_tweet"] = Like.objects.filter(user=self.request.user).values_list("tweet", flat=True)
         return context
 
 
