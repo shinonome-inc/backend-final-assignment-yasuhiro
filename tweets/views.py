@@ -65,7 +65,7 @@ class LikeView(LoginRequiredMixin, View):
         return JsonResponse(context)
 
 
-class UnLikeView(LoginRequiredMixin, View):
+class UnlikeView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         tweet = get_object_or_404(Tweet, pk=kwargs["pk"])
         Like.objects.filter(user=self.request.user, tweet=tweet).delete()
