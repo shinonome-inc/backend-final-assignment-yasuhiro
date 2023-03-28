@@ -1,9 +1,9 @@
-{% if tweet.id in liked_tweet %}
-<button id="tweet_{{tweet.id}}" onclick="LikeAction(tweet_{{tweet.id}})"
+{% if tweet.id in liked_tweets %}
+<button id="tweet_{{tweet.id}}" onclick="likeAction(tweet_{{tweet.id}})"
     data-url="{% url 'tweets:unlike' tweet.id %}">いいね解除</button>
 
 {% else %}
-<button id="tweet_{{tweet.id}}" onclick="LikeAction(tweet_{{tweet.id}})"
+<button id="tweet_{{tweet.id}}" onclick="likeAction(tweet_{{tweet.id}})"
     data-url="{% url 'tweets:like' tweet.id %}">いいね</button>
     
 {% endif %}

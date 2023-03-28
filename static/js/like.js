@@ -11,7 +11,7 @@ const getCookie = (name) => {
 const csrftoken = getCookie('csrftoken');
 
 
-const LikeAction = async (tweet) => {
+const likeAction = async (tweet) => {
 
     const url = tweet.dataset.url;
     const data = {

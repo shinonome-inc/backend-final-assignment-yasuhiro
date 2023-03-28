@@ -9,7 +9,7 @@ class Tweet(models.Model):
 
     @property
     def liked_count(self):
-        return self.likes.count
+        return self.likes.count()
 
     def __str__(self):
         return self.content
