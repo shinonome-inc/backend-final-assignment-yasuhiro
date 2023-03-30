@@ -17,6 +17,7 @@
         <br>
         <a class="detail" href="{% url 'tweets:detail' tweet.pk %}">詳細</a>
         <br>
+        {% include 'tweets/like.html' %}
     </div>
     
     {% empty %}

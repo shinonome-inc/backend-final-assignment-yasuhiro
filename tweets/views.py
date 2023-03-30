@@ -1,17 +1,23 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, DeleteView
-from django.views.generic.list import ListView
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, View
 
-from tweets.models import Tweet
+from tweets.models import Like, Tweet
 
 
 class HomeView(LoginRequiredMixin, ListView):
     model = Tweet
     context_object_name = "tweets"
     template_name = "tweets/home.html"
-    queryset = model.objects.select_related("user").order_by("-created_at")[:10]
+    ordering = "-created_at"
+    queryset = Tweet.objects.prefetch_related("likes").select_related("user").all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["liked_tweets"] = Like.objects.filter(user=self.request.user).values_list("tweet", flat=True)
+        return context
 
 
 class TweetCreateView(LoginRequiredMixin, CreateView):
@@ -30,6 +36,13 @@ class TweetDetailView(LoginRequiredMixin, DetailView):
     context_object_name = "tweet"
     template_name = "tweets/detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["liked_tweets"] = (
+            Like.objects.select_related("user").filter(user=self.request.user).values_list("tweet", flat=True)
+        )
+        return context
+
 
 class TweetDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Tweet
@@ -40,3 +53,27 @@ class TweetDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         tweet = self.get_object()
         return self.request.user == tweet.user
+
+
+class LikeView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        tweet = get_object_or_404(Tweet, pk=kwargs["pk"])
+        Like.objects.get_or_create(user=self.request.user, tweet=tweet)
+        context = {
+            "liked_count": tweet.liked_count,
+            "tweet_id": tweet.id,
+            "is_liked": True,
+        }
+        return JsonResponse(context)
+
+
+class UnlikeView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        tweet = get_object_or_404(Tweet, pk=kwargs["pk"])
+        Like.objects.filter(user=self.request.user, tweet=tweet).delete()
+        context = {
+            "liked_count": tweet.liked_count,
+            "tweet_id": tweet.id,
+            "is_liked": False,
+        }
+        return JsonResponse(context)
